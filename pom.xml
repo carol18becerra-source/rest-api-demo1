@@ -147,36 +147,24 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.2</version><!--$NO-MVN-MAN-VER$-->
-				<dependencies>
-					<!-- Extensión necesaria para formatear los DisplayNames en
-					la consola -->
-					<dependency>
-						<groupId>me.fabriciorby</groupId>
-						<artifactId>maven-surefire-junit5-tree-reporter</artifactId>
-						<version>0.1.0</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<!-- ================================================= -->
-					<!-- Mockito como Java Agent -->
-					<!-- ================================================= -->
-					<argLine>
-						-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-					</argLine>
-					<!-- ================================================= -->
-					<!-- CONFIGURACIÓN DE REPORTER JUNIT 5 EN ÁRBOL -->
-					<!-- ================================================= -->
-					<reportFormat>plain</reportFormat>
-					<consoleOutputReporter>
-						<disable>true</disable>
-					</consoleOutputReporter>
-					<statelessTestsetInfoReporter
-						implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter" />
-				</configuration>
-			</plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.6.0</version><!--$NO-MVN-MAN-VER$-->
+    <dependencies>
+        <dependency>
+            <groupId>me.fabriciorby</groupId>
+            <artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+    </dependencies>
+    <configuration>
+        <reportFormat>plain</reportFormat>
+        <consoleOutputReporter>
+            <disable>true</disable>
+        </consoleOutputReporter>
+        <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"/>
+    </configuration>
+</plugin>
 		</plugins>
 	</build>
 
