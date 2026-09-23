@@ -108,26 +108,22 @@ class ProductControllerTest {
 		 * dependencia al principio de la clase bajo Test
 		 */
 		String jsonStringProduct = objectMapper.writeValueAsString(product1);
-		
+
 		MockMultipartFile bytesArrayProduct = new MockMultipartFile("product", null, "application/json",
 				jsonStringProduct.getBytes());
-		
+
 		try {
-			ResultActions response = mockMvc.perform(multipart("/products")
-					.file(bytesArrayProduct)
-					.file("file", null));
-			
-			response
-			.andDo(print())
-			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.product.name", is(product1.getName())));
-			
+			mockMvc.perform(multipart("/products").file(bytesArrayProduct).file("file", null))
+
+					.andDo(print()).andExpect(status().isCreated())
+					.andExpect(jsonPath("$.product.name", is(product1.getName())));
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// then
-		
+
 	}
 }
