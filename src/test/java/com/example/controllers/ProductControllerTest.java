@@ -1,12 +1,13 @@
 package com.example.controllers;
 
-import static org.mockito.BDDMockito.given;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -97,6 +99,35 @@ class ProductControllerTest {
 	void testSaveProduct() {
 
 		// given
+		given(productService.save(any(Product.class))).willAnswer(invocation -> invocation.getArgument(0));
 
+		// when
+		/*
+		 * convertir el producto a formato JSON, es decir, una cadena (string) en
+		 * formato de JSON lo cual hace el objectMapper que hemos inyectado como
+		 * dependencia al principio de la clase bajo Test
+		 */
+		String jsonStringProduct = objectMapper.writeValueAsString(product1);
+		
+		MockMultipartFile bytesArrayProduct = new MockMultipartFile("product", null, "application/json",
+				jsonStringProduct.getBytes());
+		
+		try {
+			ResultActions response = mockMvc.perform(multipart("/products")
+					.file(bytesArrayProduct)
+					.file("file", null));
+			
+			response
+			.andDo(print())
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.product.name", is(product1.getName())));
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// then
+		
 	}
 }

@@ -277,7 +277,7 @@ public class ProductController {
         try {
             Product productoPersistido = productService.save(product);
             responseAsMap.put("mensaje: ", "Producto persistido exitosamente!!!");
-            responseAsMap.put("producto Persistido: ", productoPersistido);
+            responseAsMap.put("product", productoPersistido);
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.CREATED);
         } catch (DataAccessException e) {
             responseAsMap.put("Error Grave", "No ha podido ser guardado el producto y la causa mas probable es: " +
