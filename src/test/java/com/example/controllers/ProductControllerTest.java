@@ -36,6 +36,7 @@ import com.example.utilities.FileDownloadUtil;
 import com.example.utilities.FileUploadUtil;
 import com.example.utilities.FileUtil;
 
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
 @WebMvcTest(ProductController.class)
@@ -152,7 +153,7 @@ class ProductControllerTest {
 
 	@Test
 	@DisplayName("Controller Test para actualizar un producto")
-	void testActualizarProducto() {
+	void testActualizarProducto() throws JacksonException, Exception {
 		// given
 
 		int productoId = 1;
@@ -180,8 +181,12 @@ class ProductControllerTest {
 		// y por otra la imagen, hay que proceder de manera diferente (muy similar
 		// al test de persistir un producto con su imagen)
 
-//		ResultActions response = mockMvc.perform(put("/productos/{id}", productoId)
-//				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productoActualizado))
-//				.header("Authorization", this.token));
+		ResultActions response = mockMvc.perform(put("/products/{id}", productoId)
+				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productoActualizado)));
+
+		// then
+
+		response.andExpect(status().isOk()).andDo(print())
+				.andExpect(jsonPath("$.product.name", is(productoActualizado.getName())));
 	}
 }
